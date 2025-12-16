@@ -1,0 +1,59 @@
+These instructions are meant to be followed in a linux environment and more specifically 
+we used Ubuntu 20.04.
+The first step is the installation of the tools required for the implementation.
+The first installation is of geth for which we run the following commands in the terminal
+	$sudo apt install software-properties-common
+	$sudo add-apt-repository -y ppa:ethereum/ethereum
+	$sudo apt-get update
+	$sudo apt-get install ethereum
+Then we will need NodeJS and NPM
+We check whether they are already installed in our machine using the following commands
+	$node -v  και 
+	$npm -v
+If they are indeed installed we need to ensure the NodeJS is of version 8 or newer and NPM 
+is of version 5 or newer.
+If they are not already installed we install them using the following commands
+	$sudo apt install nodejs 
+	$sudo apt install npm
+Finally we install Truffle. For this project we used Truffle version 4.
+We run the following command
+	$sudo npm install -g truffle@4.0.4
+	
+After the necessary installations we begin with the node.
+In "private" folder we find everything needed for the node. The node assigned for our 
+blockchain contains three accounts the hashes of which can be found in "keystore" folder.
+Account "0" is the miner. To begin the process we first turn "startnode.sh" to an executable.
+To do so we run the following command in "private" directory
+	$chmod +x startnode.sh 
+and then we run the executable using
+	$./startnode.sh
+The first time we run it it may take a while, the following times it will be quicker.
+While the program is running we open a second terminal and run the following command
+	$geth attach
+From there we can perform transactions with the accounts we have built. An extensive guide
+with the available commands can be found at the following link
+	https://geth.ethereum.org/docs/interface/javascript-console
+For the commands that require a password, it is pass 1234 and can also be found in the 
+"password.sec" file.
+We can exit geth console using typing exit and we can stop the program typing ctrl+c.
+
+We then look into the smart contract application in the node we have built
+For starters, in our implementation we have two smart contracts. The first is called 
+"migration" and is necessary and it allows us to apply it in different nodes. The other is 
+called "Greetings" and it's a simple example we can use to set and print a message.
+To apply our smart contracts to the node we have built in the previous step, we open a terminal
+in the "Smart Contracts" directory and run the following command
+	$truffle migrate --compile-all --reset --network mynet
+This command performs the compilation. We then run
+	$truffle console --network mynet
+to get into the truffle console where we can write commands related to the node and the smart
+contracts. Furthermore to run the functions that constitute the "Greetings" smart contract we run 
+in the console 
+	$Greetings.deployed().then(function(instance){app = instance;})  
+After that we can run for example
+	$app.getGreetings()
+which will show us the smart contract's message, or run
+	$app.setGreetings("Hello Friends!", {from: web3.eth.accounts[0]})
+which will change the message to "Hello Friends!".
+
+We can always exit the console by typing $.exit
